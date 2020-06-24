@@ -1,8 +1,6 @@
 [![Build Status](https://travis-ci.com/RealVNF/deep-rl-network-service-coordination.svg?token=NVCqJRthxojczFXPsprz&branch=master)](https://travis-ci.com/RealVNF/deep-rl-network-service-coordination)
 
-# Self-Driving Service Coordination Using Deep Reinforcement Learning
-
-Self-Driving Coordination of Massively Scaled Services Using Deep Reinforcement Learning
+# Self-Driving Network and Service Coordination Using Deep Reinforcement Learning
 
 <p align="center">
   <img src="docs/realvnf_logo.png" height="150" hspace="30"/>
