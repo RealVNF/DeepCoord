@@ -1,0 +1,6 @@
+--index-url https://pypi.python.org/simple/
+
+--editable git://github.com/RealVNF/common-utils@cnsm2020#egg=common-utils
+--editable git://github.com/RealVNF/coord-sim@cnsm2020#egg=coord-sim
+
+--editable .
