@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/RealVNF/deep-rl-network-service-coordination.svg?token=NVCqJRthxojczFXPsprz&branch=master)](https://travis-ci.com/RealVNF/deep-rl-network-service-coordination)
+![Python Build](https://github.com/RealVNF/deep-rl-network-service-coordination/workflows/Python%20Build/badge.svg)
 
 # Self-Driving Network and Service Coordination Using Deep Reinforcement Learning
 
