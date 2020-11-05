@@ -34,7 +34,7 @@ jobs:
         flake8 src --count --exit-zero
     - name: Test with nose2
       run: |
-        pytest
+        nose2
     - name: Test DRL agent
       run: |
         rlsp res/config/agent/sample_agent.yaml res/networks/sample_network.graphml res/service_functions/abc.yaml res/config/simulator/sample_config.yaml 10 --append-test
