@@ -2,11 +2,30 @@
 
 # Self-Driving Network and Service Coordination Using Deep Reinforcement Learning
 
+Using DDPG for coordinating online scaling, placement, and scheduling of services and rapidly incoming requests. 
+Services consist of chained components that need to be instantiated at nodes in the substrate network and that incoming requests need to traverse in a predefined order.
+Our approach learns how to do this by itself just from experience, maximizing the amount of successfully served requests and minimizing end-to-end delay.
+It works with realistically available monitoring information, containing partial and delayed observations of the network.
+
 <p align="center">
   <img src="docs/realvnf_logo.png" height="150" hspace="30"/>
 	<img src="docs/upb.png" width="200" hspace="30"/>
 	<img src="docs/huawei_horizontal.png" width="250" hspace="30"/>
 </p>
+
+## Citation
+
+If you use this code, please cite our [paper](http://dl.ifip.org/db/conf/cnsm/cnsm2020/1570659307.pdf):
+
+```
+@inproceedings{schneider2020selfdriving,
+	title={Self-Driving Network and Service Coordination Using Deep Reinforcement Learning},
+	author={Schneider, Stefan and Manzoor, Adnan and Qarawlus, Haydar and Schellenberg, Rafael and Karl, Holger and Khalili, Ramin and Hecker, Artur},
+	booktitle={International Conference on Network and Service Management (CNSM)},
+	year={2020},
+	publisher={IFIP/IEEE}
+}
+```
 
 ## Setup
 
