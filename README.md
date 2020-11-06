@@ -27,6 +27,8 @@ If you use this code, please cite our [paper](http://dl.ifip.org/db/conf/cnsm/cn
 }
 ```
 
+*Best Student Paper at IEEE/IFIP CNSM 2020*
+
 ## Setup
 
 You need to have [Python 3.6](https://www.python.org/downloads/release/)+ and [venv](https://docs.python.org/3/library/venv.html) module installed.
