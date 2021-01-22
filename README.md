@@ -100,6 +100,8 @@ Options:
   -h, --help                   Show this message and exit.
 ```
 
+Ignore potential `tensorflow` warnings.
+
 ### Training and testing
 
 Example for short training then testing:
