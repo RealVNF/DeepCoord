@@ -1,11 +1,12 @@
 ![Python Build](https://github.com/RealVNF/deep-rl-network-service-coordination/workflows/Python%20Build/badge.svg)
 
-# Self-Driving Network and Service Coordination Using Deep Reinforcement Learning
+# Self-Learning Multi-Objective Service Coordination Using Deep Reinforcement Learning
 
-Using DDPG for coordinating online scaling, placement, and scheduling of services and rapidly incoming requests. 
-Services consist of chained components that need to be instantiated at nodes in the substrate network and that incoming requests need to traverse in a predefined order.
-Our approach learns how to do this by itself just from experience, maximizing the amount of successfully served requests and minimizing end-to-end delay.
-It works with realistically available monitoring information, containing partial and delayed observations of the network.
+Using deep reinforcement learning (with DDPG), for online service coordinating, including scaling and placement of services and scheduling of rapidly incoming flows. 
+Services consist of chained components that need to be instantiated at nodes in the substrate network and that incoming flows need to traverse in a predefined order.
+Our approach learns how to do this by itself just from experience, optimizing individual objectives (e.g., flow success rate) or multiple, 
+even competing objectives (e.g., throughput, QoS, energy, costs).
+It works with realistically available monitoring information, containing partial and delayed observations of the full network state.
 
 <p align="center">
   <img src="docs/realvnf_logo.png" height="150" hspace="30"/>
@@ -15,7 +16,7 @@ It works with realistically available monitoring information, containing partial
 
 ## Citation
 
-If you use this code, please cite our [paper](http://dl.ifip.org/db/conf/cnsm/cnsm2020/1570659307.pdf):
+If you use this code, please cite our [conference paper](http://dl.ifip.org/db/conf/cnsm/cnsm2020/1570659307.pdf):
 
 ```
 @inproceedings{schneider2020selfdriving,
@@ -33,10 +34,11 @@ If you use this code, please cite our [paper](http://dl.ifip.org/db/conf/cnsm/cn
 
 _Recommended for development_: Clone and install [`coord-sim`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) 
 locally first in the same venv before running the installation of the RL agent.
-The installation is tested and works on Ubuntu 16.04 and 20.04 with **Python 3.6**. 
-It does not with Python 3.8 because `tensorboard 1.14.0` is not available for Python 3.8 but a required dependency.
 
 You need to have [Python 3.6 or 3.7](https://www.python.org/downloads/release/) and [venv](https://docs.python.org/3/library/venv.html) module installed.
+The installation is tested and works on Ubuntu 16.04 and 20.04 with **Python 3.6**. 
+It does not with Python 3.8 because `tensorboard 1.14.0`, which is a required dependency, is not available for Python 3.8.
+
 
 ### Create a venv
 
@@ -66,7 +68,8 @@ pip install -U setuptools
 pip install -r requirements.txt
 ```
 
-This also installs the required [`coord-sim`](https://github.com/RealVNF/coord-sim/tree/tnsm2021) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) package.
+This also installs the required [`coord-sim`](https://github.com/RealVNF/coord-sim/tree/tnsm2021) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) package
+if they were not installed manually before.
 
 ## Use the RL agent
 
@@ -143,7 +146,7 @@ tensorboard --logdir==./graph/<agent_config>/<network>/<service>/<simulator_conf
 
 ## Visualizing/Analyzing Results
 
-To get a better understanding of what the agent is doing, there is an Juypter notebook `example_eval.ipynb`.
+To get a better understanding of what the agent is doing, there is an Juypter notebook `eval_example.ipynb`.
 It's just an example; you won't be able to run it without all the results (which are too large for the repo).
 
 To create a similar notebook for evaluation:
@@ -154,6 +157,18 @@ pip install -r eval_requirements.txt
 # run jupyter server
 jupyter lab
 ```
+
+_Note:_ If you're running on the server, you should start the Jupyter server in a screen with the following command:
+
+```bash
+jupyter notebook --ip 0.0.0.0 --no-browser
+```
+
+You can then access it over the server's URL at port 8888 at the `/lab` endpoint. For authentication, copy and paste the token that is displayed whed starting the Jupyter server.
+
+Additionally, the `coord-sim` simulator provides the option to generate animations of the learned policy: 
+See [coord-sim Readme](https://github.com/RealVNF/coord-sim#create-episode-animations).
+
 
 ## Training and testing on multiple scenarios
 
