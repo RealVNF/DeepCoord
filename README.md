@@ -36,7 +36,7 @@ _Recommended for development_: Clone and install [`coord-sim`](https://github.co
 locally first in the same venv before running the installation of the RL agent.
 
 You need to have [Python 3.6 or 3.7](https://www.python.org/downloads/release/) and [venv](https://docs.python.org/3/library/venv.html) module installed.
-The installation is tested and works on Ubuntu 16.04 and 20.04 with **Python 3.6**. 
+The installation is tested and works on Ubuntu 16.04 and 20.04 with **Python 3.6** and [`coord-sim v2.1.0`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0). 
 It does not with Python 3.8 because `tensorboard 1.14.0`, which is a required dependency, is not available for Python 3.8.
 
 
