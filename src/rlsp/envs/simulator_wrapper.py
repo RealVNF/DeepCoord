@@ -20,13 +20,14 @@ class SimulatorWrapper:
      this class awaits numpy arrays which are used in gym environments.
     """
 
-    def __init__(self, simulator, env_limits):
+    def __init__(self, simulator, env_limits, observations_space=('ingress_traffic', 'node_load')):
         self.simulator = simulator
         self.env_limits = env_limits
         self.sfc_dict = {}
         self.node_map = {}
         self.sfc_map = {}
         self.sf_map = {}
+        self.observations_space = observations_space
 
     def init(self, seed) -> Tuple[object, SimulatorState]:
         """Creates a new simulation environment.
@@ -190,7 +191,11 @@ class SimulatorWrapper:
                 ingress_sf = state.sfcs[sfc][0]
                 ingress_traffic[self.node_map[node]] = sf_dict[ingress_sf] / self.simulator.duration
 
-        nn_input_state = np.concatenate((ingress_traffic, node_load,), axis=None)
+        nn_input_state = np.array([])
+        if 'ingress_traffic' in self.observations_space:
+            nn_input_state = np.concatenate((nn_input_state, ingress_traffic,), axis=None)
+        if 'node_load' in self.observations_space:
+            nn_input_state = np.concatenate((nn_input_state, node_load,), axis=None)
 
         # log RL state to file during testing. need instance check because it requires the simulator writer
         if isinstance(self.simulator, Simulator) and self.simulator.test_mode:

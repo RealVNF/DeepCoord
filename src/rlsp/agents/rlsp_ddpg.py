@@ -50,6 +50,8 @@ class DDPG(RLSPAgent):
         # split output layer into separate parts for each node and SF and apply softmax individually
         out_parts = [Dense(num_nodes, activation='softmax')(prev_layer) for _ in range(num_nodes * num_sfs)]
         out = Concatenate()(out_parts)
+        # normal output layer
+        # out = Dense(nb_actions, activation='tanh')(prev_layer)
         actor = Model(inputs=observation_input, outputs=out)
 
         # create the critic NN
@@ -112,7 +114,7 @@ class DDPG(RLSPAgent):
                            decay=self.agent_helper.config['learning_rate_decay']), metrics=['mae'])
         self.agent = agent
 
-    def fit(self, env, nb_steps, verbose, nb_max_episode_steps, callbacks, log_interval, agent_id=-1):
+    def fit(self, env, episodes, verbose, episode_steps, callbacks, log_interval, agent_id=-1):
         """Mask the agent fit function"""
         self.agent_helper.callbacks = self.create_callbacks(self.agent_helper.graph_path, self.agent_helper.config_dir)
         # create additional, custom callback to store agent's episode rewards
@@ -123,11 +125,11 @@ class DDPG(RLSPAgent):
             ]
         )
         self.agent_helper.callbacks.append(reward_dict_callback)
-
-        self.agent.fit(env, nb_steps, verbose=verbose, nb_max_episode_steps=nb_max_episode_steps,
+        steps = episodes * self.agent_helper.episode_steps
+        self.agent.fit(env, steps, verbose=verbose, nb_max_episode_steps=episode_steps,
                        callbacks=self.agent_helper.callbacks, log_interval=log_interval, nb_max_start_steps=0)
 
-    def test(self, env, nb_episodes, verbose, nb_max_episode_steps, callbacks):
+    def test(self, env, episodes, verbose, episode_steps, callbacks):
         """Mask the agent fit function"""
         # Check to see if the test is called after training. Causes duplicate CSV headers
         # when agent is called only for testing.
@@ -135,8 +137,8 @@ class DDPG(RLSPAgent):
             # Create a fresh simulator with test argument
             self.agent_helper.env.simulator = create_simulator(self.agent_helper)
         self.agent_helper.callbacks = self.create_callbacks(self.agent_helper.graph_path, self.agent_helper.config_dir)
-        self.agent.test(env, nb_episodes, verbose=verbose,
-                        nb_max_episode_steps=nb_max_episode_steps,
+        self.agent.test(env, episodes, verbose=verbose,
+                        nb_max_episode_steps=episode_steps,
                         callbacks=self.agent_helper.callbacks)
 
     def save_weights(self, file, overwrite=True):

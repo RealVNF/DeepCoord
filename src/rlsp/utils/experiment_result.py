@@ -16,7 +16,7 @@ class ExperimentResult:
     id = ...  # type: str
     env_config = {}
     agent_config = {}
-    steps = ...  # type: int
+    episodes = ...  # type: int
     runtime_process_start = ...  # type: float
     runtime_walltime_start = ...  # type: float
     runtime_process = ...  # type: float
@@ -34,7 +34,7 @@ class ExperimentResult:
                 'id': self.id,
                 'env_config': self.env_config,
                 'agent_config': self.agent_config,
-                'steps': self.steps,
+                'episodes': self.episodes,
                 'runtime_process': self.runtime_process,
                 'runtime_walltime': self.runtime_walltime,
                 'log_file': self.log_file

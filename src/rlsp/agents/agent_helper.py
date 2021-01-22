@@ -1,12 +1,11 @@
 from rlsp.utils.experiment_result import ExperimentResult
-MAX_EPISODE_STEPS = 200
 
 
 class AgentHelper(object):
     """Data class to hold agent params"""
-    def __init__(self, agent_config, network, service, sim_config, seed, steps, weights, verbose,
-                 DATETIME, test, append_test, test_episodes, sim_seed, gen_scenario):
-        self.max_episode_steps = MAX_EPISODE_STEPS
+    def __init__(self, agent_config, network, service, sim_config, seed, episodes, weights, verbose,
+                 DATETIME, test, append_test, sim_seed, gen_scenario, episode_steps=200):
+        self.episode_steps = episode_steps
         self.verbose = verbose
         self.agent_config_path = agent_config
         self.network_path = network
@@ -16,7 +15,7 @@ class AgentHelper(object):
         self.experiment_id = f"{DATETIME}_seed{seed}"
         self.result = ExperimentResult(self.experiment_id)
         self.weights = weights
-        self.steps = steps
+        self.episodes = episodes
         self.agent = None
         self.result_base_path = None
         self.graph_base_path = None
@@ -39,5 +38,4 @@ class AgentHelper(object):
         self.gen_scenario_test = False
         self.gen_scenario_result_base_path = None
         self.callbacks = None
-        self.test_episodes = test_episodes
         self.sim_seed = sim_seed

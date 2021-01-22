@@ -19,7 +19,7 @@ class TestPermutations(TestCase):
         self.num_sfcs = 1
         self.num_sfs = 2
         simulator = DummySimulator(network_file, service_file, config_file)
-        network, _ = read_network(network_file)
+        network, ing_nodes, _ = read_network(network_file)
         sfc_list = get_sfc(service_file)
         self.env_limits = EnvironmentLimits(len(network.nodes), sfc_list)
         self.wrapper = SimulatorWrapper(simulator, self.env_limits)

@@ -15,12 +15,13 @@ class EnvironmentLimits:
     and provides properties to get the resulting spaces.
     """
 
-    def __init__(self, num_nodes, sfc_list):
+    def __init__(self, num_nodes, sfc_list, observation_space_len=2):
         """
         Adapt the env to max len of SFs
         """
         self.MAX_NODE_COUNT = num_nodes
         self.MAX_SF_CHAIN_COUNT = len(sfc_list)
+        self.observation_space_len = observation_space_len
 
         max_sf_length = 0
         for _, sf_list in sfc_list.items():
@@ -70,9 +71,9 @@ class EnvironmentLimits:
         """
 
         node_load_size = self.MAX_NODE_COUNT
-        shape = (2 * node_load_size,)
+        shape = (self.observation_space_len * node_load_size,)
 
-        return spaces.Box(low=0, high=10000, shape=shape)
+        return spaces.Box(low=0, high=100, shape=shape)
 
     def create_filled_node_load_array(self, default=0.0) -> np.ndarray:
         """creates an array with shape and type of the node_load array.

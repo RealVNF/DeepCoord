@@ -1,1 +1,5 @@
-res/config/agent/ddpg/agent_f1d3reward_64a_64c_099gam_00001tau_001alp_0001dec.yaml
+res/config/agent/ddpg/agent_obs1_weighted-f1d0n0_64a_64c_099gam_00001tau_001alp_0001dec.yaml
+res/config/agent/ddpg/agent_obs1_weighted-f075d0n025_64a_64c_099gam_00001tau_001alp_0001dec.yaml
+res/config/agent/ddpg/agent_obs1_weighted-f05d0n05_64a_64c_099gam_00001tau_001alp_0001dec.yaml
+res/config/agent/ddpg/agent_obs1_weighted-f025d0n075_64a_64c_099gam_00001tau_001alp_0001dec.yaml
+res/config/agent/ddpg/agent_obs1_weighted-f0d0n1_64a_64c_099gam_00001tau_001alp_0001dec.yaml

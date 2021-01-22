@@ -31,13 +31,26 @@ If you use this code, please cite our [paper](http://dl.ifip.org/db/conf/cnsm/cn
 
 ## Setup
 
-You need to have [Python 3.6](https://www.python.org/downloads/release/)+ and [venv](https://docs.python.org/3/library/venv.html) module installed.
+_Recommended for development_: Clone and install [`coord-sim`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) 
+locally first in the same venv before running the installation of the RL agent.
+The installation is tested and works on Ubuntu 16.04 and 20.04 with **Python 3.6**. 
+It does not with Python 3.8 because `tensorboard 1.14.0` is not available for Python 3.8 but a required dependency.
+
+You need to have [Python 3.6 or 3.7](https://www.python.org/downloads/release/) and [venv](https://docs.python.org/3/library/venv.html) module installed.
 
 ### Create a venv
 
 On your local machine:
 
 ```bash
+# check version
+python3 --version
+
+# if not 3.6 or 3.7, install python 3.6
+sudo apt update
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt install python3.6 python3.6-dev python3.6-venv
+
 # create venv once
 python3.6 -m venv ./venv
 # activate the venv (always)
@@ -49,10 +62,11 @@ pip install -U setuptools
 ### Install dependencies
 
 ```bash
+# from within the repo directory
 pip install -r requirements.txt
 ```
 
-This also installs the required [coord-sim](https://github.com/RealVNF/coord-sim/tree/cnsm2020) simulator and [common-utils](https://github.com/RealVNF/common-utils/tree/cnsm2020) package.
+This also installs the required [`coord-sim`](https://github.com/RealVNF/coord-sim/tree/tnsm2021) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) package.
 
 ## Use the RL agent
 
@@ -88,7 +102,7 @@ Options:
 Example for short training then testing:
 
 ```bash
-rlsp res/config/agent/sample_agent.yaml res/networks/sample_network.graphml res/service_functions/abc.yaml res/config/simulator/sample_config.yaml 1000 --append-test
+rlsp res/config/agent/sample_agent.yaml res/networks/sample_network.graphml res/service_functions/abc.yaml res/config/simulator/sample_config.yaml 10 --append-test
 ```
 
 Results are stored under `results/` according to the input arguments and the current time stamp.

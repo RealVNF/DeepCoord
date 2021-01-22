@@ -7,6 +7,7 @@ import click
 import glob
 import random
 import yaml
+from rlsp.utils.constants import SUPPORTED_OBJECTIVES
 from rlsp.utils.experiment_result import ExperimentResult, LiteralStr
 from rlsp.utils.util_functions import create_simulator
 from rlsp.agents.agent_helper import AgentHelper
@@ -31,7 +32,7 @@ logger = None
 @click.argument('network', type=click.Path(exists=True))
 @click.argument('service', type=click.Path(exists=True))
 @click.argument('sim_config', type=click.Path(exists=True))
-@click.argument('steps', type=int)
+@click.argument('episodes', type=int)
 @click.option('--seed', default=random.randint(1000, 9999),
               help="Specify the random seed for the environment and the learning agent.")
 @click.option('-t', '--test', help="Name of the training run whose weights should be used for testing.")
@@ -39,18 +40,17 @@ logger = None
 @click.option('-a', '--append-test', is_flag=True, help="Append a test run of the previously trained agent.")
 @click.option('-v', '--verbose', is_flag=True, help="Set console logger level to debug. (Default is INFO)")
 @click.option('-b', '--best', is_flag=True, help="Test the best of the trained agents so far.")
-@click.option('-e', '--test-episodes', type=int, help="Set the number of testing episodes", default=1)
 @click.option('-ss', '--sim-seed', type=int, help="Set the simulator seed", default=None)
 @click.option('-gs', '--gen-scenario', type=click.Path(exists=True),
               help="Diff. sim config file for additional scenario test", default=None)
-def cli(agent_config, network, service, sim_config, steps, seed, test, weights, append_test, verbose, best,
-        test_episodes, sim_seed, gen_scenario):
+def cli(agent_config, network, service, sim_config, episodes, seed, test, weights, append_test, verbose, best,
+        sim_seed, gen_scenario):
     """rlsp cli for learning and testing"""
     global logger
 
     # Setup agent helper class
-    agent_helper = setup(agent_config, network, service, sim_config, seed, steps, weights, verbose, DATETIME, test,
-                         append_test, best, test_episodes, sim_seed, gen_scenario)
+    agent_helper = setup(agent_config, network, service, sim_config, seed, episodes, weights, verbose, DATETIME, test,
+                         append_test, best, sim_seed, gen_scenario)
 
     # Execute training or testing
     execute(agent_helper)
@@ -58,22 +58,23 @@ def cli(agent_config, network, service, sim_config, steps, seed, test, weights, 
     wrap_up(agent_helper)
 
 
-def setup(agent_config, network, service, sim_config, seed, steps, weights,
-          verbose, DATETIME, test, append_test, best, test_episodes, sim_seed, gen_scenario):
+def setup(agent_config, network, service, sim_config, seed, episodes, weights,
+          verbose, DATETIME, test, append_test, best, sim_seed, gen_scenario):
     """Overall setup for the rl variables"""
     if best:
         assert not (test or append_test or weights), "Cannot run 'best' with test, append_test, or weights"
         result_dir = f"results/{get_base_path(agent_config, network, service, sim_config)}"
         test = select_best_agent(result_dir)
     # Create the AgentHelper data class
-    agent_helper = AgentHelper(agent_config, network, service, sim_config, seed, steps, weights, verbose, DATETIME,
-                               test, append_test, test_episodes, sim_seed, gen_scenario)
+    agent_helper = AgentHelper(agent_config, network, service, sim_config, seed, episodes, weights, verbose, DATETIME,
+                               test, append_test, sim_seed, gen_scenario)
 
     # Setup the files and paths required for the agent
     setup_files(agent_helper, best)
     set_random_seed(seed, agent_helper)
     agent_helper.config = get_config(agent_helper.agent_config_path)
-    agent_helper.result.steps = agent_helper.steps
+    agent_helper.episode_steps = agent_helper.config['episode_steps']
+    agent_helper.result.episodes = agent_helper.episodes
     # Get number of ingress nodes in the network
     no_of_ingress = num_ingress(network)
     # Create an input file with num_of_ingress and Algorithm used as attributes in the results directory
@@ -118,10 +119,10 @@ def execute(agent_helper):
             load_weights(agent_helper.agent, f"{agent_helper.result_base_path}/{agent_helper.weights}/weights")
         train_agent(agent_helper)
         if agent_helper.test:
-            # if test after training (append_test)
-            agent_helper.steps = agent_helper.max_episode_steps
+            # if test after training (append_test) test for 1 episodes
+            agent_helper.episodes = 1
             agent_helper.result = ExperimentResult(agent_helper.experiment_id)
-            agent_helper.result.steps = agent_helper.steps
+            agent_helper.result.episodes = agent_helper.episodes
             agent_helper.test_mode = True
             setup_files(agent_helper)
     if agent_helper.test:
@@ -136,9 +137,9 @@ def execute(agent_helper):
 def train_agent(agent_helper):
     """Calling the agent's train function"""
     agent_helper.result.runtime_start()
-    training(agent_helper.agent, agent_helper.env, agent_helper.callbacks, agent_helper.steps, agent_helper.result)
+    training(agent_helper.agent, agent_helper.env, agent_helper.callbacks, agent_helper.episodes, agent_helper.result)
     agent_helper.result.runtime_stop()
-    save_weights(agent_helper.agent, agent_helper.config_dir)
+    agent_helper.agent.save_weights(agent_helper.config_dir, overwrite=True)
 
 
 def test_agent(agent_helper):
@@ -146,8 +147,8 @@ def test_agent(agent_helper):
     logger.info("Switching to testing mode")
     load_weights(agent_helper.agent, agent_helper.weights_path)
     agent_helper.result.runtime_start()
-    testing(agent_helper.agent, agent_helper.env, agent_helper.callbacks, agent_helper.steps,
-            agent_helper.test_episodes, agent_helper.result)
+    testing(agent_helper.agent, agent_helper.env, agent_helper.callbacks, agent_helper.episode_steps,
+            agent_helper.episodes, agent_helper.result)
     agent_helper.result.runtime_stop()
 
 
@@ -247,6 +248,27 @@ def get_config(config_file):
         config = yaml.load(f, Loader=yaml.FullLoader)
         # if missing in the config, use following defaults
         config.setdefault('shuffle_nodes', False)
+        config.setdefault('observation_space', ['ingress_traffic'])
+        # safety checks
+        assert 'objective' in config and config['objective'] in SUPPORTED_OBJECTIVES, \
+            f"Objective {config['objective']} not recognized. Must be one of {SUPPORTED_OBJECTIVES}, " \
+            f"recommended default: 'prio-flow'."
+        if config['objective'] == 'prio-flow':
+            assert 'target_success' in config and \
+                   (config['target_success'] == 'auto' or 0 <= config['target_success'] <= 1)
+        if config['objective'] in {'soft-deadline', 'soft-deadline-exp'}:
+            assert 'soft_deadline' in config
+            if config['objective'] == 'soft-deadline-exp':
+                assert 'dropoff' in config and config['dropoff'] > 0, "Use 'soft-deadline' objective for 0 dropoff."
+        if config['objective'] == 'weighted':
+            for weight in ['flow_weight', 'delay_weight', 'node_weight', 'instance_weight']:
+                if weight not in config:
+                    logger.warning(f"Using weighted objective, but {weight} not configured. Defaulting to {weight}=0.")
+        config.setdefault('target_success', None)
+        config.setdefault('soft_deadline', None)
+        config.setdefault('dropoff', None)
+        for weight in ['flow_weight', 'delay_weight', 'node_weight', 'instance_weight']:
+            config.setdefault(weight, 0)
     return config
 
 
@@ -269,6 +291,9 @@ def copy_input_files(target_dir, agent_config_path, network_path, service_path, 
 def setup_logging(verbose, logfile):
     logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
     logger = logging.getLogger()
+
+    # disable tensorflow warnings
+    logging.getLogger('tensorflow').setLevel(logging.ERROR)
 
     # we assume here, that there is at least one handler set in basic config and it is the console logger
     if verbose:
@@ -293,10 +318,6 @@ def load_weights(agent, file):
     # Here we load the trained model from EXPERIMENTS_BASE_PATH
     logger.info(f"load weights:{file}")
     agent.load_weights(file)
-
-
-def save_weights(agent, file):
-    agent.save_weights(file, overwrite=True)
 
 
 def create_environment(agent_helper):
@@ -325,56 +346,51 @@ def create_environment(agent_helper):
 def create_agent(agent_helper):
     """ Create the RL Agent"""
     agent_type = agent_helper.config.get('agent_type')
-    if agent_type == 'DDPG':
-        agent = DDPG(agent_helper)
-    else:
-        # Default to DDPG
-        logger.warning('Agent was not specified. Defaulting to DDPG')
-        agent = DDPG(agent_helper)
+    agent = DDPG(agent_helper)
     return agent
 
 
-def testing(agent, env, callbacks, episode_steps, test_episodes, result):
+def testing(agent, env, callbacks, episode_steps, episodes, result):
     result.agent_config['episode_steps'] = episode_steps
     # run single episode with specified number of steps
-    agent.test(env, nb_episodes=test_episodes, verbose=1, nb_max_episode_steps=episode_steps, callbacks=callbacks)
+    agent.test(env, episodes=episodes, verbose=1, episode_steps=episode_steps, callbacks=callbacks)
     logger.info("FINISHED TEST")
 
 
-def training(agent, env, callbacks, steps, result):
-    nb_max_episode_steps = agent.agent_helper.max_episode_steps
-    result.agent_config['steps'] = steps
-    result.agent_config['episode_steps'] = nb_max_episode_steps
-    agent.fit(env, nb_steps=steps, verbose=1, nb_max_episode_steps=nb_max_episode_steps, callbacks=callbacks,
-              log_interval=steps)
+def training(agent, env, callbacks, episodes, result):
+    episode_steps = agent.agent_helper.episode_steps
+    result.agent_config['episodes'] = episodes
+    result.agent_config['episode_steps'] = episode_steps
+    agent.fit(env, episodes=episodes, verbose=1, episode_steps=episode_steps, callbacks=callbacks,
+              log_interval=episodes * episode_steps)
     logger.info("FINISHED TRAINING")
 
 
 if __name__ == '__main__':
-    agent_config = 'res/config/agent/ddpg/agent_f1d3reward_64a_64c_099gam_00001tau_001alp_0001dec.yaml'
-    network = 'res/networks/abilene/abilene-in3-rand-cap.graphml'
+    agent_config = 'res/config/agent/ddpg/agent_obs1_weighted-f0d0n1_64a_64c_099gam_00001tau_001alp_0001dec.yaml'
+    network = 'res/networks/abilene/abilene-in4-rand-cap0-2.graphml'
     service = 'res/service_functions/abc.yaml'
-    sim_config = 'res/config/simulator/rand-mmp-arrival10-5_det-size001_dur100.yaml'
-    # gen_sim_config = 'res/config/simulator/det-mmp-arrival10-5_det-size001_dur100.yaml'
+    sim_config = 'res/config/simulator/rand-mmp-arrival12-8_det-size001_dur100.yaml'
+    # sim_config = 'res/config/simulator/det-mmp-arrival7-3_det-size0_dur100_no_traffic_prediction.yaml'
 
-    # training
-    # cli([agent_config, network, service, sim_config, '200', '-v'])
+    # training for 1 episode
+    # cli([agent_config, network, service, sim_config, '1', '-v'])
 
-    # testing
-    # cli([agent_config, network, service, sim_config, '200', '-t', '2020-02-11_13-51-18_seed4216'])
+    # testing for 4 episode
+    # cli([agent_config, network, service, sim_config, '1', '-t', '2021-01-07_13-00-43_seed1234'])
 
-    # training & testing
-    cli([agent_config, network, service, sim_config, '200', '--append-test'])
+    # training & testing for 1 episodes
+    cli([agent_config, network, service, sim_config, '70', '--append-test'])
 
-    # training & testing for 4 episodes, with fixed simulator seed
-    # cli([agent_config, network, service, sim_config, '200', '--append-test', '-e', '4', '-ss', '5555'])
+    # training & testing for 4 episodes, with fixed simulator seed.
+    # cli([agent_config, network, service, sim_config, '4', '--append-test', '-ss', '5555'])
 
-    # continue training
-    # cli([agent_config, network, service, sim_config, '10000', '--append-test', '--weights',
-    #      '2020-02-12_13-40-09_seed6154'])
+    # continue training for 5 episodes
+    # cli([agent_config, network, service, sim_config, '20', '--append-test', '--weights',
+    #      '2020-10-13_07-47-53_seed9764'])
 
     # test select_best
-    # cli([agent_config, network, service, sim_config, '200', '--best', '--sim-seed', '1234'])
+    # cli([agent_config, network, service, sim_config, '1', '--best', '--sim-seed', '1234'])
 
     # Generalization: Test on two scenarios with the same trained weights
-    # cli([agent_config, network, service, sim_config, '200', '--append-test', '-ss', '5555', '-gs', gen_sim_config])
+    # cli([agent_config, network, service, sim_config, '1', '--append-test', '-ss', '5555', '-gs', gen_sim_config])

@@ -79,7 +79,7 @@
       <data key="d32">-74.00597</data>
       <data key="d33">New York</data>
       <data key="d39">Ingress</data>
-      <data key="d40">1</data>
+      <data key="d40">3</data>
     </node>
     <node id="1">
       <data key="d28">1</data>
@@ -89,7 +89,7 @@
       <data key="d32">-87.65005</data>
       <data key="d33">Chicago</data>
       <data key="d39">Normal</data>
-      <data key="d40">1</data>
+      <data key="d40">3</data>
     </node>
     <node id="2">
       <data key="d28">1</data>
@@ -99,30 +99,31 @@
       <data key="d32">-77.03637</data>
       <data key="d33">Washington DC</data>
       <data key="d39">Normal</data>
-      <data key="d40">1</data>
+      <data key="d40">3</data>
     </node>
     <edge source="0" target="1">
       <data key="d34">OC-192</data>
       <data key="d35">OC-192c</data>
       <data key="d36">c</data>
       <data key="d37">0</data>
-      <data key="d41">1024</data>
+      <data key="d38">10</data>
+      <data key="d41">1000</data>
     </edge>
     <edge source="0" target="2">
       <data key="d34">OC-192</data>
       <data key="d35">OC-192c</data>
       <data key="d36">c</data>
       <data key="d37">0</data>
-      <data key="d41">1024</data>
-      <data key="d42">512</data>
+      <data key="d38">10</data>
+      <data key="d41">1000</data>
     </edge>
     <edge source="1" target="2">
       <data key="d34">OC-192</data>
       <data key="d35">OC-192c</data>
       <data key="d36">c</data>
       <data key="d37">0</data>
-      <data key="d38">15</data>
-      <data key="d41">1024</data>
+      <data key="d38">10</data>
+      <data key="d41">1000</data>
     </edge>
   </graph>
 </graphml>
