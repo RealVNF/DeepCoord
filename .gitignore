@@ -3,6 +3,7 @@
 venv37
 venv-tensorboard-win
 results
+venv*
 
 # LSTM weights
 res/lstm_weights

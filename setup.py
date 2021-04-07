@@ -19,10 +19,10 @@ test_requirements = [
 ]
 
 setup(
-    name='rlsp',
-    version='1.1.0',
-    description='Self-Learning Network and Service Coordination Using Deep Reinforcement Learning',
-    url='https://github.com/RealVNF/deep-rl-network-service-coordination',
+    name='deepcoord',
+    version='1.1.1',
+    description='DeepCoord: Self-Learning Network and Service Coordination Using Deep Reinforcement Learning',
+    url='https://github.com/RealVNF/DeepCoord',
     author='RealVNF',
     package_dir={'': 'src'},
     packages=find_packages('src'),
@@ -33,7 +33,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            "rlsp=rlsp.agents.main:cli",
+            "deepcoord=rlsp.agents.main:cli",
         ],
     },
 )

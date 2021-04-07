@@ -1,6 +1,6 @@
 ![Python Build](https://github.com/RealVNF/deep-rl-network-service-coordination/workflows/Python%20Build/badge.svg)
 
-# Self-Learning Multi-Objective Service Coordination Using Deep Reinforcement Learning
+# DeepCoord: Self-Learning Multi-Objective Service Coordination Using Deep Reinforcement Learning
 
 Using deep reinforcement learning (with DDPG), for online service coordinating, including scaling and placement of services and scheduling of rapidly incoming flows. 
 Services consist of chained components that need to be instantiated at nodes in the substrate network and that incoming flows need to traverse in a predefined order.
@@ -28,7 +28,7 @@ If you use this code, please cite our [conference paper](http://dl.ifip.org/db/c
 }
 ```
 
-*Best Student Paper at IEEE/IFIP CNSM 2020*
+[*Best Student Paper at IEEE/IFIP CNSM 2020*](https://stefanbschneider.github.io/assets/other/best_student_paper_cnsm2020.pdf)
 
 ## Setup
 
@@ -76,10 +76,10 @@ if they were not installed manually before.
 All options:
 
 ```bash
-$ rlsp -h
-Usage: rlsp [OPTIONS] AGENT_CONFIG NETWORK SERVICE SIM_CONFIG STEPS
+$ deepcoord -h
+Usage: deepcoord [OPTIONS] AGENT_CONFIG NETWORK SERVICE SIM_CONFIG STEPS
 
-  rlsp cli for learning and testing
+  deepcoord cli for learning and testing
 
 Options:
   --seed INTEGER               Specify the random seed for the environment and
@@ -107,7 +107,7 @@ Ignore potential `tensorflow` warnings.
 Example for short training then testing:
 
 ```bash
-rlsp res/config/agent/sample_agent.yaml res/networks/sample_network.graphml res/service_functions/abc.yaml res/config/simulator/sample_config.yaml 10 --append-test
+deepcoord res/config/agent/sample_agent.yaml res/networks/sample_network.graphml res/service_functions/abc.yaml res/config/simulator/sample_config.yaml 10 --append-test
 ```
 
 Results are stored under `results/` according to the input arguments and the current time stamp.
@@ -119,7 +119,7 @@ To run another test run with the trained weights, specify the `<timestamp_seed>`
 For example:
 
 ```bash
-rlsp res/config/agent/sample_agent.yaml res/networks/sample_network.graphml res/service_functions/abc.yaml res/config/simulator/sample_config.yaml 200 -t <timestamp_seed> -e 1
+deepcoord res/config/agent/sample_agent.yaml res/networks/sample_network.graphml res/service_functions/abc.yaml res/config/simulator/sample_config.yaml 200 -t <timestamp_seed> -e 1
 ```
 
 ### Testing with a different simulator configuration (Generalization)
@@ -129,7 +129,7 @@ To train an agent and test it on multiple scenarios (simulator configurations), 
 Example for testing with generalization:
 
 ```bash
-rlsp res/config/agent/sample_agent.yaml res/networks/sample_network.graphml res/service_functions/abc.yaml res/config/simulator/sample_config.yaml 1000 --append-test -gs res/config/simulator/sample_config.yaml
+deepcoord res/config/agent/sample_agent.yaml res/networks/sample_network.graphml res/service_functions/abc.yaml res/config/simulator/sample_config.yaml 1000 --append-test -gs res/config/simulator/sample_config.yaml
 ```
 
 ## Learning Curves using Tensorboard
