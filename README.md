@@ -74,17 +74,9 @@ pip install -U setuptools
 
 ### Install Dependencies
 
-#### Installation via PyPI
 
-Install DeepCoord from [PyPI](https://pypi.org/project/deepcoord/):
+DeepCoord is available on [PyPI](https://pypi.org/project/deepcoord/), but we recommend installing it from source:
 
-```
-pip install deepcoord
-```
-
-If you run into issues with this, try installing from source (below).
-
-#### Installation from Source (for Development)
 
 _Recommended for development_: Clone and install [`coord-sim`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) 
 locally first in the same venv before running the installation of the RL agent.
