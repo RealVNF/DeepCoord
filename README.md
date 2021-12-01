@@ -1,4 +1,7 @@
 ![Python Build](https://github.com/RealVNF/deep-rl-network-service-coordination/workflows/Python%20Build/badge.svg)
+[![PyPi](https://github.com/RealVNF/DeepCoord/actions/workflows/python-publish.yml/badge.svg)](https://github.com/RealVNF/DeepCoord/actions/workflows/python-publish.yml)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RealVNF/DeepCoord/blob/master/quickstart.ipynb)
+
 
 # DeepCoord: Self-Learning Multi-Objective Service Coordination Using Deep Reinforcement Learning
 
@@ -8,10 +11,12 @@ Our approach learns how to do this by itself just from experience, optimizing in
 even competing objectives (e.g., throughput, QoS, energy, costs).
 It works with realistically available monitoring information, containing partial and delayed observations of the full network state.
 
+For a quick start, check out our Quick Start Notebook: [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/RealVNF/DeepCoord/blob/master/quickstart.ipynb)
+
 <p align="center">
-  <img src="docs/realvnf_logo.png" height="150" hspace="30"/>
-	<img src="docs/upb.png" width="200" hspace="30"/>
-	<img src="docs/huawei_horizontal.png" width="250" hspace="30"/>
+    <img src="https://raw.githubusercontent.com/RealVNF/DeepCoord/master/docs/realvnf_logo.png?raw=true" height="150" hspace="30"/>
+    <img src="https://raw.githubusercontent.com/RealVNF/DeepCoord/master/docs/upb.png?raw=true" width="200" hspace="30"/>
+    <img src="https://raw.githubusercontent.com/RealVNF/DeepCoord/master/docs/huawei_horizontal.png?raw=true" width="250" hspace="30"/>
 </p>
 
 
@@ -42,13 +47,9 @@ If you use this code, please cite our [conference paper](http://dl.ifip.org/db/c
 
 ## Setup
 
-_Recommended for development_: Clone and install [`coord-sim`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) 
-locally first in the same venv before running the installation of the RL agent.
-
 You need to have [Python 3.6 or 3.7](https://www.python.org/downloads/release/) and [venv](https://docs.python.org/3/library/venv.html) module installed.
 The installation is tested and works on Ubuntu 16.04 and 20.04 with **Python 3.6** and [`coord-sim v2.1.0`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0). 
 It does not with Python 3.8 because `tensorboard 1.14.0`, which is a required dependency, is not available for Python 3.8.
-
 
 ### Create a venv
 
@@ -71,7 +72,22 @@ source venv/bin/activate
 pip install -U setuptools
 ```
 
-### Install dependencies
+### Install Dependencies
+
+#### Installation via PyPI
+
+Install DeepCoord from [PyPI](https://pypi.org/project/deepcoord/):
+
+```
+pip install deepcoord
+```
+
+If you run into issues with this, try installing from source (below).
+
+#### Installation from Source (for Development)
+
+_Recommended for development_: Clone and install [`coord-sim`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) 
+locally first in the same venv before running the installation of the RL agent.
 
 ```bash
 # from within the repo directory
@@ -201,6 +217,6 @@ To run long training sessions in remote environments without risking to stop the
 This project has received funding from German Federal Ministry of Education and Research ([BMBF](https://www.bmbf.de/)) through Software Campus grant 01IS17046 ([RealVNF](https://realvnf.github.io/)).
 
 <p align="center">
-	<img src="docs/software_campus.png" width="200"/>
-	<img src="docs/BMBF_sponsored_by.jpg" width="250"/>
+	<img src="https://raw.githubusercontent.com/RealVNF/DeepCoord/master/docs/software_campus.png?raw=true" width="200"/>
+	<img src="https://raw.githubusercontent.com/RealVNF/DeepCoord/master/docs/BMBF_sponsored_by.jpg?raw=true" width="250"/>
 </p>

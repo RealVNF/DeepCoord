@@ -36,7 +36,7 @@ setup(
     author='RealVNF',
     package_dir={'': 'src'},
     packages=find_packages('src'),
-    python_requires=">=3.6.*",
+    python_requires=">=3.6.*, <=3.7.*",
     install_requires=requirements + test_requirements,
     tests_require=test_requirements,
     test_suite='nose2.collector.collector',
@@ -46,4 +46,11 @@ setup(
             "deepcoord=rlsp.agents.main:cli",
         ],
     },
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
 )
