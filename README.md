@@ -14,6 +14,7 @@ It works with realistically available monitoring information, containing partial
 	<img src="docs/huawei_horizontal.png" width="250" hspace="30"/>
 </p>
 
+
 ## Citation
 
 If you use this code, please cite our [conference paper](http://dl.ifip.org/db/conf/cnsm/cnsm2020/1570659307.pdf) ([Best Student Paper at IEEE/IFIP CNSM 2020](https://stefanbschneider.github.io/assets/other/best_student_paper_cnsm2020.pdf)) and [journal paper](https://ris.uni-paderborn.de/record/21808):
@@ -31,8 +32,10 @@ If you use this code, please cite our [conference paper](http://dl.ifip.org/db/c
 	title={Self-Learning Multi-Objective Service Coordination Using Deep Reinforcement Learning},
 	author={Schneider, Stefan and Khalili, Ramin and Manzoor, Adnan and Qarawlus, Haydar and Schellenberg, Rafael and Karl, Holger and Hecker, Artur},
 	journal={Transactions on Network and Service Management (TNSM)},
-	publisher={IEEE},
-	year={2021}
+	volume={18},
+	number={3},
+	year={2021},
+	publisher={IEEE}
 }
 ```
 
