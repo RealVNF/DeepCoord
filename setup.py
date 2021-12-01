@@ -36,7 +36,7 @@ setup(
     author='RealVNF',
     package_dir={'': 'src'},
     packages=find_packages('src'),
-    python_requires=">=3.6.*, <=3.7.*",
+    python_requires=">=3.6.*, <3.8.*",
     install_requires=requirements + test_requirements,
     tests_require=test_requirements,
     test_suite='nose2.collector.collector',
