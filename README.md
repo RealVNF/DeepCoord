@@ -111,7 +111,6 @@ Options:
   -v, --verbose                Set console logger level to debug. (Default is
                                INFO)
   -b, --best                   Test the best of the trained agents so far.
-  -e, --test-episodes INTEGER  Set the number of testing episodes
   -ss, --sim-seed INTEGER      Set the simulator seed
   -gs, --gen-scenario PATH     Diff. sim config file for additional scenario
                                test
