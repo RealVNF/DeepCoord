@@ -2,11 +2,13 @@ from datetime import datetime
 from logging import FileHandler, Formatter
 import logging.config
 import os
+import os.path
 from shutil import copyfile, copy
 import click
 import glob
 import random
 import yaml
+from pathlib import Path
 from rlsp.utils.constants import SUPPORTED_OBJECTIVES
 from rlsp.utils.experiment_result import ExperimentResult, LiteralStr
 from rlsp.utils.util_functions import create_simulator
@@ -289,7 +291,10 @@ def copy_input_files(target_dir, agent_config_path, network_path, service_path, 
 
 
 def setup_logging(verbose, logfile):
-    logging.config.fileConfig('logging.conf', disable_existing_loggers=False)
+    # main.py --> agents --> rlsp --> src --> project root
+    project_root = Path(os.path.abspath(__file__)).parent.parent.parent.parent.absolute()
+    logging_config_path = os.path.join(project_root, "logging.conf")
+    logging.config.fileConfig(logging_config_path, disable_existing_loggers=False)
     logger = logging.getLogger()
 
     # disable tensorflow warnings
