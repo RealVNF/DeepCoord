@@ -19,7 +19,7 @@ requirements = [
     'gym[atari]==0.14.0',
     'pandas==1.0.0',
     'h5py==2.10',
-    'sklearn'
+    'scikit-learn'
 ]
 
 test_requirements = [
