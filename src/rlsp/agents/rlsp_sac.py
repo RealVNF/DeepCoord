@@ -16,7 +16,6 @@ EPISODE_REWARDS = {}
 class SAC_Agent(RLSPAgent):
     """SAC Agent for RLSP"""
 
-
     def __init__(self, agent_helper, logger):
         self.agent_helper = agent_helper
 
@@ -45,7 +44,7 @@ class SAC_Agent(RLSPAgent):
     def fit(self, env, episodes, verbose, episode_steps, callbacks, log_interval):
         """Mask the agent fit function"""
         steps = episodes * self.agent_helper.episode_steps
-        self.agent.env = env    ## added command
+        self.agent.env = env    # added command
         self.agent.learn(steps, callback=self._callbacks, tb_log_name=self.agent_helper.graph_path)
         self.close_callbacks()
 
@@ -75,7 +74,7 @@ class SAC_Agent(RLSPAgent):
 
         self.close_callbacks()
 
-    ## save and load weights as .zip files
+    # save and load weights as .zip files
     def save_weights(self, weights_file, overwrite=True):
         logger.info("saving model and weights to %s", weights_file)
         dir_path = os.path.dirname(os.path.realpath(weights_file))
@@ -85,7 +84,7 @@ class SAC_Agent(RLSPAgent):
     def load_weights(self, weights_file):
         self.agent = SAC.load(weights_file)
 
-    ## save and load weights as .h5f files as DDPG
+    # save and load weights as .h5f files as DDPG
     # def save_weights(self, weights_file, overwrite=True):
     #     weights_files = f"{weights_file}weights.h5f"
     #     dir_path = os.path.dirname(os.path.realpath(weights_files))
@@ -114,10 +113,8 @@ class SAC_Agent(RLSPAgent):
         if (locals_['step'] != 1) and ((locals_['step'] + 1) % self.agent_helper.episode_steps == 0):
             self.episode_reward_csv_writer.writerow([len(locals_['episode_rewards']), locals_['episode_rewards'][-1]])
 
-            #print episode_rewards during training
-            print(len(locals_['episode_rewards']),",", locals_['episode_rewards'][-1])
-
-
+            # print episode_rewards during training
+            print(len(locals_['episode_rewards']), ",", locals_['episode_rewards'][-1])
 
     def prepare_callbacks(self):
         self.run_reward_file = open(f"{self.agent_helper.config_dir}run_reward.csv", 'a+', newline='')

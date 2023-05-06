@@ -114,7 +114,7 @@ def select_best_agent(result_dir, num_agents=None):
 def execute(agent_helper):
     """Execution function for testing or training"""
     agent_helper.env = create_environment(agent_helper)
-    agent_helper.agent = create_agent(agent_helper)
+    agent_helper.agent = DDPG(agent_helper)
 
     if agent_helper.train:
         if agent_helper.weights:
@@ -346,13 +346,6 @@ def create_environment(agent_helper):
 
     agent_helper.result.env_config['reward_fnc'] = LiteralStr(env.reward_func_repr())
     return env
-
-
-def create_agent(agent_helper):
-    """ Create the RL Agent"""
-    agent_type = agent_helper.config.get('agent_type')
-    agent = DDPG(agent_helper)
-    return agent
 
 
 def testing(agent, env, callbacks, episode_steps, episodes, result):
