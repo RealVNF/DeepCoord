@@ -38,6 +38,7 @@ setup(
     author='Stefan Schneider',
     package_dir={'': 'src'},
     packages=find_packages('src'),
+    package_data={'rlsp.agents': ['logging.conf']},
     python_requires=">=3.6, <3.8",
     install_requires=requirements + test_requirements,
     tests_require=test_requirements,
