@@ -48,8 +48,9 @@ If you use this code, please cite our [conference paper](http://dl.ifip.org/db/c
 ## Setup
 
 You need to have [Python 3.6 or 3.7](https://www.python.org/downloads/release/) and [venv](https://docs.python.org/3/library/venv.html) module installed.
-The installation is tested and works on Ubuntu 16.04 and 20.04 with **Python 3.6** and [`coord-sim v2.1.0`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0). 
-It does not with Python 3.8 because `tensorboard 1.14.0`, which is a required dependency, is not available for Python 3.8.
+The installation was tested locally and works on Ubuntu 16.04 and 20.04 with **Python 3.6** and [`coord-sim v2.1.0`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0).
+Newer changes are only tested on Python 3.7 by the GitHub CI (which does not support Python 3.6 anymore).
+DeepCoord does not work with Python 3.8 because `tensorboard 1.14.0`, which is a required dependency, is not available for Python 3.8.
 
 ### Create a venv
 
@@ -77,17 +78,12 @@ pip install -U setuptools
 
 DeepCoord is available on [PyPI](https://pypi.org/project/deepcoord/), but we recommend installing it from source:
 
-
-_Recommended for development_: Clone and install [`coord-sim`](https://github.com/RealVNF/coord-sim/releases/tag/v2.1.0) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) 
-locally first in the same venv before running the installation of the RL agent.
-
 ```bash
 # from within the repo directory
-pip install -r requirements.txt
+pip install -e .
 ```
 
-This also installs the required [`coord-sim`](https://github.com/RealVNF/coord-sim/tree/tnsm2021) and [`common-utils`](https://github.com/RealVNF/common-utils/tree/tnsm2021) package
-if they were not installed manually before.
+This also installs the required [`coord-sim`](https://github.com/RealVNF/coord-sim) simulation environment.
 
 ## Use the RL agent
 

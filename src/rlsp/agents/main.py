@@ -114,7 +114,7 @@ def select_best_agent(result_dir, num_agents=None):
 def execute(agent_helper):
     """Execution function for testing or training"""
     agent_helper.env = create_environment(agent_helper)
-    agent_helper.agent = create_agent(agent_helper)
+    agent_helper.agent = DDPG(agent_helper)
 
     if agent_helper.train:
         if agent_helper.weights:
@@ -291,9 +291,10 @@ def copy_input_files(target_dir, agent_config_path, network_path, service_path, 
 
 
 def setup_logging(verbose, logfile):
-    # main.py --> agents --> rlsp --> src --> project root
-    project_root = Path(os.path.abspath(__file__)).parent.parent.parent.parent.absolute()
-    logging_config_path = os.path.join(project_root, "logging.conf")
+    # main.py --> agents --> rlsp --> src --> logging.conf
+    agents_dir = Path(os.path.abspath(__file__)).parent.absolute()
+    logging_config_path = os.path.join(agents_dir, "logging.conf")
+    print(logging_config_path)
     logging.config.fileConfig(logging_config_path, disable_existing_loggers=False)
     logger = logging.getLogger()
 
@@ -348,13 +349,6 @@ def create_environment(agent_helper):
     return env
 
 
-def create_agent(agent_helper):
-    """ Create the RL Agent"""
-    agent_type = agent_helper.config.get('agent_type')
-    agent = DDPG(agent_helper)
-    return agent
-
-
 def testing(agent, env, callbacks, episode_steps, episodes, result):
     result.agent_config['episode_steps'] = episode_steps
     # run single episode with specified number of steps
@@ -372,11 +366,10 @@ def training(agent, env, callbacks, episodes, result):
 
 
 if __name__ == '__main__':
-    agent_config = 'res/config/agent/ddpg/agent_obs1_weighted-f0d0n1_64a_64c_099gam_00001tau_001alp_0001dec.yaml'
-    network = 'res/networks/abilene/abilene-in4-rand-cap0-2.graphml'
+    agent_config = 'res/config/agent/ddpg/agent_obs1_prio-flow_64a_64c_099gam_00001tau_001alp_0001dec.yaml'
+    network = 'res/networks/abilene/abilene-in4-rand-cap0-5.graphml'
     service = 'res/service_functions/abc.yaml'
-    sim_config = 'res/config/simulator/rand-mmp-arrival12-8_det-size001_dur100.yaml'
-    # sim_config = 'res/config/simulator/det-mmp-arrival7-3_det-size0_dur100_no_traffic_prediction.yaml'
+    sim_config = 'res/config/simulator/rand-arrival10_det-size001_duration100.yaml'
 
     # training for 1 episode
     # cli([agent_config, network, service, sim_config, '1', '-v'])
@@ -385,7 +378,7 @@ if __name__ == '__main__':
     # cli([agent_config, network, service, sim_config, '1', '-t', '2021-01-07_13-00-43_seed1234'])
 
     # training & testing for 1 episodes
-    cli([agent_config, network, service, sim_config, '70', '--append-test'])
+    cli([agent_config, network, service, sim_config, '10', '--append-test'])
 
     # training & testing for 4 episodes, with fixed simulator seed.
     # cli([agent_config, network, service, sim_config, '4', '--append-test', '-ss', '5555'])

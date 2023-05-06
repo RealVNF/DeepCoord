@@ -10,6 +10,7 @@ with open(os.path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 
 requirements = [
+    'coord-sim==2.2.1',
     'click==7.0',
     'numpy>=1.16.5,<1.19',
     'keras==2.2.5',
@@ -17,8 +18,9 @@ requirements = [
     'tensorflow==1.14.0',
     'cloudpickle==1.2',
     'gym[atari]==0.14.0',
-    'pandas==1.0.0',
-    'h5py==2.10'
+    'pandas==1.1.5',
+    'h5py==2.10',
+    'protobuf==3.20.3'
 ]
 
 test_requirements = [
@@ -28,15 +30,16 @@ test_requirements = [
 
 setup(
     name='deepcoord',
-    version='1.1.1',
+    version='1.1.2',
     description='DeepCoord: Self-Learning Network and Service Coordination Using Deep Reinforcement Learning',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/RealVNF/DeepCoord',
-    author='RealVNF',
+    author='Stefan Schneider',
     package_dir={'': 'src'},
     packages=find_packages('src'),
-    python_requires=">=3.6.*, <3.8.*",
+    package_data={'rlsp.agents': ['logging.conf']},
+    python_requires=">=3.6, <3.8",
     install_requires=requirements + test_requirements,
     tests_require=test_requirements,
     test_suite='nose2.collector.collector',
