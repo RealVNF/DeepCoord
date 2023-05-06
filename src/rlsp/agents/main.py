@@ -294,6 +294,7 @@ def setup_logging(verbose, logfile):
     # main.py --> agents --> rlsp --> src --> logging.conf
     src_dir = Path(os.path.abspath(__file__)).parent.parent.parent.absolute()
     logging_config_path = os.path.join(src_dir, "logging.conf")
+    print(src_dir, logging_config_path)
     logging.config.fileConfig(logging_config_path, disable_existing_loggers=False)
     logger = logging.getLogger()
 
@@ -365,17 +366,11 @@ def training(agent, env, callbacks, episodes, result):
 
 
 if __name__ == '__main__':
-    agent_config = 'res/config/agent/sample_agent.yaml'
-    network = 'res/networks/sample_network.graphml'
+    agent_config = 'res/config/agent/ddpg/agent_obs1_prio-flow_64a_64c_099gam_00001tau_001alp_0001dec.yaml'
+    network = 'res/networks/abilene/abilene-in4-rand-cap0-2.graphml'
     service = 'res/service_functions/abc.yaml'
-    sim_config = 'res/config/simulator/sample_config.yaml'
-    cli([agent_config, network, service, sim_config, '10', '--append-test'])
-
-    # agent_config = 'res/config/agent/ddpg/agent_obs1_weighted-f0d0n1_64a_64c_099gam_00001tau_001alp_0001dec.yaml'
-    # network = 'res/networks/abilene/abilene-in4-rand-cap0-2.graphml'
-    # service = 'res/service_functions/abc.yaml'
-    # sim_config = 'res/config/simulator/rand-mmp-arrival12-8_det-size001_dur100.yaml'
-    # sim_config = 'res/config/simulator/det-mmp-arrival7-3_det-size0_dur100_no_traffic_prediction.yaml'
+    sim_config = 'res/config/simulator/rand-mmp-arrival12-8_det-size001_dur100.yaml'
+    sim_config = 'res/config/simulator/det-mmp-arrival7-3_det-size0_dur100_no_traffic_prediction.yaml'
 
     # training for 1 episode
     # cli([agent_config, network, service, sim_config, '1', '-v'])
