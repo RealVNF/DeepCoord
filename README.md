@@ -126,6 +126,9 @@ deepcoord res/config/agent/sample_agent.yaml res/networks/sample_network.graphml
 Results are stored under `results/` according to the input arguments and the current time stamp.
 There, you'll find copies of the used inputs, the trained weights, logs, and all result files of any test runs that you performed with these weights.
 
+If you get a `FileNotFoundError` for the result file, it is possible that the file path is too long under Windows (see https://github.com/RealVNF/DeepCoord/issues/16).
+Then you can solve the error by renaming your files to have shorter filenames.
+
 ### Testing
 
 To run another test run with the trained weights, specify the `<timestamp_seed>` of the training run. For testing, it is recommended to use 200 steps as it is the duration of one episode and use `-e` to specify the number of testing episodes.
